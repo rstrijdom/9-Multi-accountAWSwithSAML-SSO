@@ -24,7 +24,42 @@ Who has access to the production account?
         2. If a fix is urgent, it goes through an expedited pipeline run: automated, audited, but faster.
         3. If the system is completely down and the pipeline is broken then this is a break-glass scenario. A time-limited, monitored elevated access is granted, every action is logged, and a review takes place afterward.
 
-Permission Set 1 - DeveloperAccess
+Permission Set 1 - SecurityAudit
+    Custom permission set based on AWS Managed Policy: SecurityAudit
+    Session duration: 4 hours
+    Relay state: https://console.aws.amazon.com/cloudtrail/home
+
+    Additional managed policies to attach:
+    These add explicit read access to services that SecurityAudit covers partially but not completely:
+        CloudTrail - already covered by SecurityAudit
+        GuardDuty - already covered by SecurityAudit
+        Config - AWS managed read access is included in SecurityAudit
+    Inline deny policy added to explicitly enforce no write actions:
+    {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+        "Sid": "DenyAllWrite",
+        "Effect": "Deny",
+        "Action": [
+            "cloudtrail:DeleteTrail",
+            "cloudtrail:StopLogging",
+            "cloudtrail:UpdateTrail",
+            "guardduty:DeleteDetector",
+            "guardduty:DisassociateFromMasterAccount",
+            "config:DeleteConfigRule",
+            "config:DeleteConfigurationRecorder",
+            "config:StopConfigurationRecorder",
+            "iam:*",
+            "organizations:*"
+        ],
+        "Resource": "*"
+        }
+    ]
+    }
+    This explicitly protects security tooling from being disabled even by someone using these credentials, thus creating a defence in depth control.
+
+Permission Set 2 - DeveloperAccess
     Custom Permission Set based on AWS Managed Policy: PowerUserAccess
     Session duration: 8 hours
     Inline deny policy:
@@ -66,44 +101,8 @@ Permission Set 1 - DeveloperAccess
 
     The billing and account denials are added here to prevent Devs from modifying billing settings or closing accounts, which could be an operational risk.
 
-Permission Set 2 - SecurityAnalyst
-    Custom permission set based on AWS Managed Policy: SecurityAudit
-    Session duration: 4 hours
-    Relay state: https://console.aws.amazon.com/cloudtrail/home
-
-    Additional managed policies to attach:
-    These add explicit read access to services that SecurityAudit covers partially but not completely:
-        CloudTrail - already covered by SecurityAudit
-        GuardDuty - already covered by SecurityAudit
-        Config - AWS managed read access is included in SecurityAudit
-    Inline deny policy added to explicitly enforce no write actions:
-    {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-        "Sid": "DenyAllWrite",
-        "Effect": "Deny",
-        "Action": [
-            "cloudtrail:DeleteTrail",
-            "cloudtrail:StopLogging",
-            "cloudtrail:UpdateTrail",
-            "guardduty:DeleteDetector",
-            "guardduty:DisassociateFromMasterAccount",
-            "config:DeleteConfigRule",
-            "config:DeleteConfigurationRecorder",
-            "config:StopConfigurationRecorder",
-            "iam:*",
-            "organizations:*"
-        ],
-        "Resource": "*"
-        }
-    ]
-    }
-    This explicitly protects security tooling from being disabled even by someone using these credentials, thus creating a defence in depth control.
-
 Permission Set 3 — AdministratorAccess
-    Predefined permission set
-    Policy: AdministratorAccess
+    Custom permission set based on AWS Managed Policy: AdministratorAccess
     Session duration: 2 hours — deliberately short to reduce risk
 
     MFA enforcement:
