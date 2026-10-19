@@ -1,0 +1,15 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+        "Sid": "DenyOrganisationChanges",
+        "Effect": "Deny",
+        "Action": [
+            "organizations:DeleteOrganization",
+            "organizations:RemoveAccountFromOrganization",
+            "organizations:LeaveOrganization"
+        ],
+        "Resource": "*"
+        }
+    ]
+    }

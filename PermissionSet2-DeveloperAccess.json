@@ -1,0 +1,35 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+        "Sid": "DenyIAMWrite",
+        "Effect": "Deny",
+        "Action": [
+            "iam:CreateUser",
+            "iam:DeleteUser",
+            "iam:AttachRolePolicy",
+            "iam:DeleteRolePolicy",
+            "iam:PutRolePolicy",
+            "iam:CreatePolicy",
+            "iam:DeletePolicy",
+            "iam:CreateAccessKey",
+            "iam:UpdateAccessKey"
+        ],
+        "Resource": "*"
+        },
+        {
+        "Sid": "DenyBillingAndAccountManagement",
+        "Effect": "Deny",
+        "Action": [
+            "aws-portal:*",
+            "billing:*",
+            "budgets:ModifyBudget",
+            "account:CloseAccount",
+            "account:PutAlternateContact",
+            "organizations:Leave*",
+            "organizations:Delete*"
+        ],
+        "Resource": "*"
+        }
+    ]
+    }

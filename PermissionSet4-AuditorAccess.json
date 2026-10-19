@@ -1,0 +1,18 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+        "Sid": "DenySecretsAndKeyAccess",
+        "Effect": "Deny",
+        "Action": [
+            "secretsmanager:GetSecretValue",
+            "ssm:GetParameter",
+            "ssm:GetParameters",
+            "ssm:GetParametersByPath",
+            "kms:Decrypt",
+            "s3:GetObject"
+        ],
+        "Resource": "*"
+        }
+    ]
+    }
