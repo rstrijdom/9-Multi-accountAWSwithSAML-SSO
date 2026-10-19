@@ -13,7 +13,12 @@
         "budgets:*",
         "globalaccelerator:*",
         "sts:*",
-        "trustedadvisor:*"
+        "trustedadvisor:*",
+        "health:*",
+        "ec2:DescribeRegions",
+        "s3:ListAllMyBuckets",
+        "s3:GetAccountPublic*",
+        "s3:PutAccountPublic*"
       ],
       "Resource": "*",
       "Condition": {
